@@ -69,6 +69,6 @@
 
     - name: append profile.d autoload
       blockinfile:
-        dest: "{{home}}//.profile"
+        dest: "{{home}}/.profile"
         block: |
           [ -d ~/.profile.d ] && for s in ~/.profile.d/*;do . $s; done
