@@ -34,6 +34,15 @@
         - python-pip
       become: true
 
+## sudo
+
+    - name: make sudo group passwordless
+      blockinfile:
+        dest: /etc/sudoers
+        block: |
+          %sudo ALL=(ALL) NOPASSWD: ALL
+      become: true
+
 ## vim
 
     - name: fetch vim themes
