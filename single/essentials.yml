@@ -1,0 +1,65 @@
+---
+
+- hosts: all
+  become_method: su
+
+  vars:
+    vimrc: |
+      syntax on
+      set ts=8
+      set noai
+      set ruler
+      set tw=80
+      set t_Co=256
+      colorscheme molokai-transparent
+
+    loadpowerline: |
+      powerline-daemon -q
+      POWERLINE_BASH_CONTINUATION=1
+      POWERLINE_BASH_SELECT=1
+      . /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh
+
+    home: "{{lookup('env', 'HOME')}}"
+
+  tasks:
+    - name: installs essential tools
+      apt: name={{item}} state=installed
+      with_items:
+        - vim
+        - sudo
+        - tmux
+        - build-essential
+        - git
+        - python
+        - python-pip
+      become: true
+
+## vim
+
+    - name: fetch vim themes
+      git:
+        repo: https://github.com/hugoroy/.vim
+        dest: "{{home}}/.vim"
+
+    - name: create basic vimrc
+      copy: content="{{vimrc}}" dest="{{home}}/.vimrc"
+
+## shell
+
+    - name: install powerline from pip
+      pip: name=powerline-status
+      become: true
+
+    - file:
+        path: "{{home}}/.profile.d"
+        state: directory
+        mode: 0755
+
+    - name: create powerline autoload
+      copy: content="{{loadpowerline}}" dest="{{home}}/.profile.d/powerline"
+
+    - name: append profile.d autoload
+      blockinfile:
+        dest: "{{home}}//.profile"
+        block: |
+          [ -d ~/.profile.d ] && for s in ~/.profile.d/*;do . $s; done
