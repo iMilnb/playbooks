@@ -66,6 +66,7 @@
     - name: record module path
       command: python -c "import powerline, os; print(os.path.dirname(powerline.__file__))"
       register: powerlinepath
+      failed_when: powerlinepath is undefined
 
     - name: create powerline autoload
       copy: content="{{loadpowerline}}\n. {{powerlinepath.stdout_lines[0]}}/bindings/bash/powerline.sh\n" dest="{{home}}/.profile.d/powerline"
