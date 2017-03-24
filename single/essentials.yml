@@ -12,6 +12,7 @@
       set tw=80
       set t_Co=256
       colorscheme molokai-transparent
+      set laststatus=2
 
     loadpowerline: |
       powerline-daemon -q
@@ -24,7 +25,7 @@
     - name: installs essential tools
       apt: name={{item}} state=installed
       with_items:
-        - vim
+        - vim-nox
         - sudo
         - tmux
         - build-essential
@@ -41,16 +42,6 @@
         block: |
           %sudo ALL=(ALL) NOPASSWD: ALL
       become: true
-
-## vim
-
-    - name: fetch vim themes
-      git:
-        repo: https://github.com/hugoroy/.vim
-        dest: "{{home}}/.vim"
-
-    - name: create basic vimrc
-      copy: content="{{vimrc}}" dest="{{home}}/.vimrc"
 
 ## shell
 
@@ -76,3 +67,14 @@
         dest: "{{home}}/.profile"
         block: |
           [ -d ~/.profile.d ] && for s in ~/.profile.d/*;do . $s; done
+
+## vim
+
+    - name: fetch vim themes
+      git:
+        repo: https://github.com/hugoroy/.vim
+        dest: "{{home}}/.vim"
+
+    - name: create basic vimrc
+      copy: content="{{vimrc}}\nset rtp+={{powerlinepath.stdout_lines[0]}}/bindings/vim\n" dest="{{home}}/.vimrc"
+
