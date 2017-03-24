@@ -17,7 +17,6 @@
       powerline-daemon -q
       POWERLINE_BASH_CONTINUATION=1
       POWERLINE_BASH_SELECT=1
-      . /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh
 
     home: "{{lookup('env', 'HOME')}}"
 
@@ -64,8 +63,12 @@
         state: directory
         mode: 0755
 
+    - name: record module path
+      command: python -c "import powerline, os; print(os.path.dirname(powerline.__file__))"
+      register: powerlinepath
+
     - name: create powerline autoload
-      copy: content="{{loadpowerline}}" dest="{{home}}/.profile.d/powerline"
+      copy: content="{{loadpowerline}}\n. {{powerlinepath.stdout_lines[0]}}/bindings/bash/powerline.sh\n" dest="{{home}}/.profile.d/powerline"
 
     - name: append profile.d autoload
       blockinfile:
