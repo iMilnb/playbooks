@@ -1,0 +1,13 @@
+---
+- hosts: all
+
+  tasks:
+    
+    - name: Update all packages to the latest version
+      become: true
+      apt:
+        update_cache: yes
+        upgrade: dist
+      # bug: mint is not listed as Debian family in ansible < 2.4.0
+      # https://github.com/ansible/ansible/pull/25567
+      when: ansible_os_family == "Debian" or ansible_distribution == "Linuxmint"
