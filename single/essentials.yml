@@ -8,6 +8,12 @@
     homedir: "/home/{{myuser}}"
 
   tasks:
+
+    - name: update apt cache
+      apt: update_cache=yes
+      tags:
+        - packages
+
     - name: installs essential tools
       apt: name={{item}} state=installed
       with_items:
@@ -19,6 +25,8 @@
         - python
         - python-pip
         - zsh
+      tags:
+        - packages
 
 ## sudo
 
