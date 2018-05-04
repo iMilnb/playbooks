@@ -9,13 +9,15 @@
 
   tasks:
 
-    - name: update apt cache
+    - name: updates apt cache
       apt: update_cache=yes
-      tags:
-        - packages
 
-    - name: installs essential tools
-      apt: name={{item}} state=installed
+    - name: updates pkgin cache
+      pkgin: update_cache=yes
+
+    - name: installs essential tools (debian)
+      apt:
+        name: "{{item}}"
       with_items:
         - vim-nox
         - sudo
@@ -25,9 +27,24 @@
         - python
         - python-pip
         - zsh
+      when: ansible_os_family == "Debian" or ansible_distribution == "Linuxmint"
       tags:
         - packages
 
+    - name: installs essential tools (NetBSD)
+      pkgin:
+        name: "{{item}}"
+      with_items:
+        - vim
+        - sudo
+        - tmux
+        - git
+        - python27
+        - py27-pip
+        - zsh
+      when: ansible_os_family == "NetBSD"
+      tags:
+        - packages
 ## sudo
 
     - name: make sudo group passwordless
