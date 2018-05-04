@@ -1,0 +1,16 @@
+---
+pkgs:
+  - vim-nox
+  - sudo
+  - tmux
+  - build-essential
+  - git
+  - python
+  - python-pip
+  - zsh
+
+prefix: ""
+
+usrbin: "/usr/bin"
+
+wheel: "sudo"

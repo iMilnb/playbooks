@@ -21,51 +21,27 @@
       tags:
         - packages
 
-    - name: installs essential tools (debian)
-      apt:
+    - name: installs essential tools
+      package:
         name: "{{item}}"
-      with_items:
-        - vim-nox
-        - sudo
-        - tmux
-        - build-essential
-        - git
-        - python
-        - python-pip
-        - zsh
-      when: ansible_os_family == "Debian" or ansible_distribution == "Linuxmint"
-      tags:
-        - packages
-
-    - name: installs essential tools (NetBSD)
-      pkgin:
-        name: "{{item}}"
-      with_items:
-        - vim
-        - sudo
-        - tmux
-        - git
-        - python27
-        - py27-pip
-        - zsh
-      when: ansible_os_family == "NetBSD"
+      with_flattened: "{{pkgs}}"
       tags:
         - packages
 ## sudo
 
-    - name: make sudo group passwordless
+    - name: make sudo/wheel group passwordless
       blockinfile:
-        dest: /etc/sudoers
+        dest: "{{prefix}}/etc/sudoers"
         block: |
-          %sudo ALL=(ALL) NOPASSWD: ALL
+          %{{wheel}} ALL=(ALL) NOPASSWD: ALL
 
 ## create the user
 
     - name: user add
       user:
         name: "{{myuser}}"
-        groups: sudo
-        shell: /usr/bin/zsh
+        groups: "{{wheel}}"
+        shell: "{{usrbin}}/zsh"
 
 ## shell
 

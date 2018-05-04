@@ -1,0 +1,15 @@
+---
+pkgs:
+  - vim
+  - sudo
+  - tmux
+  - git
+  - python27
+  - py27-pip
+  - zsh
+
+prefix: "/usr/pkg"
+
+usrbin: "{{prefix}}/bin"
+
+wheel: "wheel"
