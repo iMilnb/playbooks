@@ -11,9 +11,15 @@
 
     - name: updates apt cache
       apt: update_cache=yes
+      when: ansible_os_family == "Debian" or ansible_distribution == "Linuxmint"
+      tags:
+        - packages
 
     - name: updates pkgin cache
       pkgin: update_cache=yes
+      when: ansible_os_family == "NetBSD"
+      tags:
+        - packages
 
     - name: installs essential tools (debian)
       apt:
