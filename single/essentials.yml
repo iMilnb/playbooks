@@ -1,5 +1,5 @@
 ---
-# call me with --extra-vars "myuser=foo myghuser=foogh"
+# call me with --extra-vars "myuser=foo myghuser=foogh new=yes"
 
 - hosts: all
   become: true
@@ -88,15 +88,24 @@
         path: "{{homedir}}/.ssh"
         state: directory
         mode: 0700
+        owner: "{{myuser}}"
+      tags:
+        - ssh
 
     - name: fetch SSH pubkeys
       get_url:
         url: "https://github.com/{{myghuser}}.keys"
         dest: "{{homedir}}/.ssh/authorized_keys"
         mode: 0600
+        owner: "{{myuser}}"
+      tags:
+        - ssh
 
     - name: chown user
       file:
         path: "{{homedir}}"
         owner: "{{myuser}}"
         recurse: yes
+      when: new is defined
+      tags:
+        - chown
