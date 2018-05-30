@@ -50,6 +50,12 @@
         repo: https://github.com/iMilnb/dotfiles.git
         dest: "{{homedir}}/etc/dotfiles"
 
+    - name: create vim colors directory
+      file:
+        path: "{{homedir}}/.vim/colors"
+        state: directory
+        mode: 0755
+
     - name: link dotfiles
       file:
         src: "{{homedir}}/etc/dotfiles/{{item}}"
