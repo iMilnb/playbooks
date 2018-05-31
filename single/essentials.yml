@@ -27,6 +27,15 @@
       with_flattened: "{{pkgs}}"
       tags:
         - packages
+
+    - name: additional packages
+      package:
+        name: "{{item}}"
+      with_flattened: "{{add_pkgs}}"
+      when: add_pkgs is defined
+      tags:
+        - packages
+
 ## sudo
 
     - name: make sudo/wheel group passwordless
