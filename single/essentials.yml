@@ -36,6 +36,14 @@
       tags:
         - packages
 
+    - name: pip packages
+      pip:
+        name: "{{item}}"
+      with_flattened: "{{pip_pkgs}}"
+      when: pip_pkgs is defined
+      tags:
+        - packages
+
 ## sudo
 
     - name: make sudo/wheel group passwordless
@@ -95,6 +103,22 @@
       git:
         repo: https://github.com/VundleVim/Vundle.vim.git
         dest: "{{homedir}}/.vim/bundle/Vundle.vim"
+
+    - name: install tmux plugin manager
+      git:
+        repo: https://github.com/tmux-plugins/tpm.git
+        dest: "{{homedir}}/.tmux/plugins/tpm"
+
+## copy files
+
+    - name: copy additional files
+      copy:
+        src: "{{item.key}}"
+        dest: "{{item.value}}"
+        owner: "{{myuser}}"
+      loop: "{{ query('dict', copy_files) }}"
+      tags:
+        - copy_files
 
 ## chown user
 
